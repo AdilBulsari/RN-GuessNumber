@@ -11,8 +11,14 @@ const StartScreen = () => {
         autoCapitalize="none"
         autoCorrect={false}
       />
-      <PrimaryButton>Reset</PrimaryButton>
-      <PrimaryButton>Confirm</PrimaryButton>
+      <View style={styles.buttonsContainer}>
+        <View style={styles.buttonContainer}>
+          <PrimaryButton>Reset</PrimaryButton>
+        </View>
+        <View style={styles.buttonContainer}>
+          <PrimaryButton>Confirm</PrimaryButton>
+        </View>
+      </View>
     </View>
   );
 };
@@ -21,12 +27,12 @@ export default StartScreen;
 
 const styles = StyleSheet.create({
   inputContainer: {
+    alignItems: "center",
     marginHorizontal: 24,
     borderRadius: 8,
     padding: 16,
     marginTop: 100,
     backgroundColor: "#4e0239",
-
     shadowColor: "black",
     shadowOffset: { width: -2, height: 4 },
     shadowOpacity: 0.25,
@@ -42,5 +48,11 @@ const styles = StyleSheet.create({
     width: 60,
     fontWeight: "bold",
     textAlign: "center",
+  },
+  buttonsContainer: {
+    flexDirection: "row",
+  },
+  buttonContainer: {
+    flex: 1,
   },
 });
