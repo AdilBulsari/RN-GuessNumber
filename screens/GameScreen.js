@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View } from "react-native";
-import React, { useState } from "react";
+import { Alert, StyleSheet, Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
 import Title from "../components/UI/Title";
 import NumberContainer from "../components/Game/NumberContainer";
 import PrimaryButton from "../components/UI/PrimaryButton";
@@ -14,15 +14,45 @@ const generateNumberBetween = (min, max, exclude) => {
   }
 };
 
-const GameScreen = ({ userNumber }) => {
-  const intitialGuess = generateNumberBetween(1, 100, parseInt(userNumber));
+let minBoundary = 1;
+let maxBoundary = 100;
+const GameScreen = ({ userNumber, setGameOver }) => {
+  const intitialGuess = generateNumberBetween(1, 100, userNumber);
 
   const [currentGuess, setCurrentGuess] = useState(intitialGuess);
 
-  function nextGuessHanler(direction) {
-    if (direction === "lower") {
-      generateNumberBetween();
+  useEffect(() => {
+    if (currentGuess === userNumber) {
+      setGameOver(true);
     }
+  }, [currentGuess, userNumber, setGameOver]);
+
+  function nextGuessHanler(direction) {
+    if (
+      (direction === "lower" && currentGuess < userNumber) ||
+      (direction === "greater" && currentGuess > userNumber)
+    ) {
+      Alert.alert("This is wrong", "You know this is wrong", [
+        {
+          text: "Sorry !",
+          style: "cancel",
+        },
+      ]);
+      return;
+    }
+
+    if (direction === "lower") {
+      maxBoundary = currentGuess;
+    } else {
+      minBoundary = currentGuess + 1;
+    }
+
+    const newRandomNumber = generateNumberBetween(
+      minBoundary,
+      maxBoundary,
+      currentGuess
+    );
+    setCurrentGuess(newRandomNumber);
   }
 
   return (
@@ -33,8 +63,12 @@ const GameScreen = ({ userNumber }) => {
       <View>
         <Text>Higher or Lower ?</Text>
         <View style={styles.conatiner}>
-          <PrimaryButton>+</PrimaryButton>
-          <PrimaryButton>-</PrimaryButton>
+          <PrimaryButton onPress={() => nextGuessHanler("greater")}>
+            +
+          </PrimaryButton>
+          <PrimaryButton onPress={() => nextGuessHanler("lower")}>
+            -
+          </PrimaryButton>
         </View>
       </View>
     </View>
